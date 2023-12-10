@@ -15,8 +15,18 @@ def test_ui(page: Page, init_logger):
     page.goto("https://rahulshettyacademy.com/loginpagePractise/")
     logger.info(f"page title = {page.title()}")
 
-    userName.fill("rahulshetty")
+    # userName.fill("rahulshetty")
+    # password.fill("learning")
+    # signIn.click()
+    # logger.info(f"{errorMsg.text_content()}")
+    # expect(errorMsg).to_contain_text('Incorrect')
+
+    userName.fill("")
+    userName.fill("rahulshettyacademy")
     password.fill("learning")
     signIn.click()
-    logger.info(f"{errorMsg.text_content()}")
-    expect(errorMsg).to_contain_text('Incorrect')
+    logger.info(f"first card title: {page.locator('.card-body a').first.text_content()}")
+    logger.info(f"second card title: {page.locator('.card-body a').nth(1).text_content()}")
+    allTitles = cardTitle.all_text_contents()
+    logger.info(f"card titles are: {allTitles}")
+
