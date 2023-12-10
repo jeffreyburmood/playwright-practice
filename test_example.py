@@ -18,7 +18,7 @@ def test_get_started_link(page: Page):
 
 def test_browser_context_approach(playwright: Playwright):
     webkit = playwright.webkit
-    browser = webkit.launch(headless=False)
+    browser = webkit.launch(headless=True)
     # create a new incognito browser context
     context = browser.new_context()
     # create a new page inside context.
