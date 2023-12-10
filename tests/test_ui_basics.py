@@ -14,3 +14,9 @@ def test_ui(page: Page, init_logger):
 
     page.goto("https://rahulshettyacademy.com/loginpagePractise/")
     logger.info(f"page title = {page.title()}")
+
+    userName.fill("rahulshetty")
+    password.fill("learning")
+    signIn.click()
+    logger.info(f"{errorMsg.text_content()}")
+    expect(errorMsg).to_contain_text('Incorrect')
