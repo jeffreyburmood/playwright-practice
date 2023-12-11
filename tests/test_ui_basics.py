@@ -25,8 +25,21 @@ def test_ui(page: Page, init_logger):
     userName.fill("rahulshettyacademy")
     password.fill("learning")
     signIn.click()
-    logger.info(f"first card title: {page.locator('.card-body a').first.text_content()}")
-    logger.info(f"second card title: {page.locator('.card-body a').nth(1).text_content()}")
+    #logger.info(f"first card title: {page.locator('.card-body a').first.text_content()}")
+    #logger.info(f"second card title: {page.locator('.card-body a').nth(1).text_content()}")
+    cardTitle.first.wait_for()  # needed because all_text_contents() does not auto-wait
     allTitles = cardTitle.all_text_contents()
     logger.info(f"card titles are: {allTitles}")
 
+def test_ui_controls(page: Page):
+    page.goto("https://rahulshettyacademy.com/loginpagePractise/")
+    userName = page.locator('#username')
+    signIn = page.locator('#signInBtn')
+    password = page.locator("[type='password']")
+    dropdown = page.locator(("select.form-control"))
+
+    dropdown.select_option("consult")
+    page.locator(".radiotextsty").last.click()
+    page.locator("#okayBtn").click()
+    
+    page.pause()
