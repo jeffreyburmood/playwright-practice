@@ -31,7 +31,9 @@ def test_ui(page: Page, init_logger):
     allTitles = cardTitle.all_text_contents()
     logger.info(f"card titles are: {allTitles}")
 
-def test_ui_controls(page: Page):
+def test_ui_controls(page: Page, init_logger):
+    logger = init_logger
+
     page.goto("https://rahulshettyacademy.com/loginpagePractise/")
     userName = page.locator('#username')
     signIn = page.locator('#signInBtn')
@@ -41,5 +43,11 @@ def test_ui_controls(page: Page):
     dropdown.select_option("consult")
     page.locator(".radiotextsty").last.click()
     page.locator("#okayBtn").click()
-    
-    page.pause()
+    logger.info(f"button s clicked?: {page.locator(".radiotextsty").last.is_checked()}")
+    expect(page.locator(".radiotextsty").last).to_be_checked()
+    page.locator("#terms").click()
+    expect(page.locator("#terms")).to_be_checked()
+    page.locator("#terms").uncheck()
+    expect(page.locator("#terms")).not_to_be_checked()
+
+    #page.pause()
