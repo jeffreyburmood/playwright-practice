@@ -1,6 +1,6 @@
 """ this file contains test cases for basic UI testing with Playwright """
 
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page, expect, Browser
 
 def test_ui(page: Page, init_logger):
     logger = init_logger
@@ -51,3 +51,15 @@ def test_ui_controls(page: Page, init_logger):
     expect(page.locator("#terms")).not_to_be_checked()
 
     #page.pause()
+
+def test_child_windows(browser: Browser, init_logger):
+    logger = init_logger
+
+    context = browser.new_context()
+    page = context.new_page()
+
+    page.goto("https://rahulshettyacademy.com/loginpagePractise/")
+    documentLink = page.locator("[href+='documents-request']")
+    documentLink.click()
+    page2 = context.wait_for_event() # listen for any new page
+
