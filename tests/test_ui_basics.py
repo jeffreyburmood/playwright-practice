@@ -55,11 +55,25 @@ def test_ui_controls(page: Page, init_logger):
 def test_child_windows(browser: Browser, init_logger):
     logger = init_logger
 
+    # set up a browser context and then create a page
     context = browser.new_context()
     page = context.new_page()
 
+    # set up locator
+    userName = page.locator('#username')
+    signIn = page.locator('#signInBtn')
+    password = page.locator("[type='password']")
+
     page.goto("https://rahulshettyacademy.com/loginpagePractise/")
-    documentLink = page.locator("[href+='documents-request']")
-    documentLink.click()
-    page2 = context.wait_for_event() # listen for any new page
+
+    userName.fill("")
+    userName.fill("rahulshettyacademy")
+    password.fill("learning")
+    signIn.click()
+
+    with context.expect_page() as new_page:
+        page.locator("[href*='documents-request']").click()
+    docs_page = new_page.value
+    text = docs_page.locator(".red").text_content()
+    logger.info(f"here's the text from the Docs page: {text}")
 
