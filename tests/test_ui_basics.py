@@ -1,5 +1,5 @@
 """ this file contains test cases for basic UI testing with Playwright """
-
+import pytest
 from playwright.sync_api import Page, expect, Browser
 
 def test_ui(page: Page, init_logger):
@@ -31,6 +31,7 @@ def test_ui(page: Page, init_logger):
     allTitles = cardTitle.all_text_contents()
     logger.info(f"card titles are: {allTitles}")
 
+
 def test_ui_controls(page: Page, init_logger):
     logger = init_logger
 
@@ -51,6 +52,7 @@ def test_ui_controls(page: Page, init_logger):
     expect(page.locator("#terms")).not_to_be_checked()
 
     #page.pause()
+
 
 def test_child_windows(browser: Browser, init_logger):
     logger = init_logger
