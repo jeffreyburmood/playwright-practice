@@ -52,6 +52,7 @@ coverage.xml
 cover/
 reports/
 logs/
+test-results/
 
 # Translations
 *.mo
