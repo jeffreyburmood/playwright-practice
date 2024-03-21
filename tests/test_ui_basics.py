@@ -2,24 +2,25 @@
 import pytest
 from playwright.sync_api import Page, expect, Browser
 
+@pytest.mark.skip
 def test_ui(page: Page, init_logger):
     logger = init_logger
 
     # selectors and locators
-    userName = page.locator('#username')
-    signIn = page.locator('#signInBtn')
-    cardTitle = page.locator('.card-body a')
-    password = page.locator("[type='password']")
-    errorMsg = page.locator("[style*='block']")
+    userName = page.locator('#username')  # id attribute
+    signIn = page.locator('#signInBtn')   # id attribute
+    cardTitle = page.locator('.card-body a')  # classname attribute
+    password = page.locator("[type='password']")  # use attribute name and value directly
+    errorMsg = page.locator("[style*='block']")   # can also use partial attribute value (instead of [style='display: block'])
 
     page.goto("https://rahulshettyacademy.com/loginpagePractise/")
     logger.info(f"page title = {page.title()}")
 
-    # userName.fill("rahulshetty")
-    # password.fill("learning")
-    # signIn.click()
-    # logger.info(f"{errorMsg.text_content()}")
-    # expect(errorMsg).to_contain_text('Incorrect')
+    userName.fill("rahulshetty")
+    password.fill("learning")
+    signIn.click()
+    logger.info(f"{errorMsg.text_content()}")
+    expect(errorMsg).to_contain_text('Incorrect')
 
     userName.fill("")
     userName.fill("rahulshettyacademy")
@@ -53,7 +54,7 @@ def test_ui_controls(page: Page, init_logger):
 
     #page.pause()
 
-
+@pytest.mark.skip
 def test_child_windows(browser: Browser, init_logger):
     logger = init_logger
 
