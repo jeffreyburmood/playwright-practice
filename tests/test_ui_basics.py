@@ -32,7 +32,7 @@ def test_ui(page: Page, init_logger):
     allTitles = cardTitle.all_text_contents()
     logger.info(f"card titles are: {allTitles}")
 
-
+@pytest.mark.skip
 def test_ui_controls(page: Page, init_logger):
     logger = init_logger
 

@@ -2,7 +2,7 @@
 import pytest
 from playwright.sync_api import Page, expect, Browser
 
-def test_client_app(page: Page, init_logger):
+def test_client(page: Page, init_logger):
     logger = init_logger
 
     # selectors and locators
@@ -31,8 +31,31 @@ def test_client_app(page: Page, init_logger):
     page.locator("[routerlink*='cart']").click()
     # wait for the list of products to load
     page.locator("div li").first.wait_for()
-    # find out if the desired product is on the page
+    # assert that the desired product is on the page
     expect(page.locator("h3:has-text('ZARA COAT 3')")).to_be_visible()
+    # now click on the checkout button
+    page.locator("text=Checkout").click()
 
+    # now work through the checkout page filling in the required information
+    # personal information
+    # credit card
+    page.locator("input[type='text']").first.fill("4278 9999 0000 0000")
+    page.get_by_role("combobox").first.select_option('02')
+    page.get_by_role("combobox").last.select_option('25')
+    page.locator("input[type='text']").nth(1).fill("234")
+    page.locator("input[type='text']").nth(2).fill("John Smith")
+    #page.locator("input[name='coupon']").fill("COUPON")
+    #page.get_by_role("button", name="Apply Coupon").click()
+    # shipping information
+    # select country for shipping by slowly typing first few letters
+    page.locator("[placeholder*='Country']").press_sequentially("ind")
+    dropdown = page.locator(".ta-results")
+    dropdown.wait_for()
+    for i in range(0, dropdown.count()):
+        text_select = dropdown.locator(".ta-item").nth(i).text_content()
+        if text_select.strip() == "India":
+            dropdown.locator(".ta-item").nth(i).click()
+            break
+    logger.info(f"Completed entering checkout information")
 
 
