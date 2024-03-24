@@ -76,11 +76,12 @@ def test_client(page: Page, init_logger):
     # verify the order appears on the Orders page
     page.locator("button[routerlink*='myorders']").click()
     # grab the table with all of the orders
+    # wait for table body to load so the count() method will work
+    page.locator("tbody").wait_for()
     rows = page.locator("tbody tr")
-    counter = rows.count()
-    logger.info(f"orders row count = {counter}")
+    logger.info(f"orders row count = {rows.count()}")
     # loop through each row of the table and check the order ID
-    for i in range(0, 7):
+    for i in range(0, rows.count()):
         row_orderID = rows.nth(i).locator("th").text_content()
         logger.info(f"row order id = {row_orderID}")
         if order_id.find(row_orderID) != -1:
