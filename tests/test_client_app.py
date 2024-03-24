@@ -5,6 +5,7 @@ from playwright.sync_api import Page, expect, Browser
 def test_client(page: Page, init_logger):
     logger = init_logger
 
+    email = "anshika@gmail.com"
     # selectors and locators
     userLogin = page.locator("#userEmail")
     userPassword = page.locator("#userPassword")
@@ -13,7 +14,7 @@ def test_client(page: Page, init_logger):
 
     # log into client retail site
     page.goto("https://rahulshettyacademy.com/client")
-    userLogin.fill("anshika@gmail.com")
+    userLogin.fill(email)
     userPassword.fill("Iamking@000")
     loginButton.click()
 
@@ -51,11 +52,44 @@ def test_client(page: Page, init_logger):
     page.locator("[placeholder*='Country']").press_sequentially("ind")
     dropdown = page.locator(".ta-results")
     dropdown.wait_for()
-    for i in range(0, dropdown.count()):
-        text_select = dropdown.locator(".ta-item").nth(i).text_content()
-        if text_select.strip() == "India":
-            dropdown.locator(".ta-item").nth(i).click()
+    options_count = dropdown.locator("button").count()
+    for i in range(0, options_count):
+        text = dropdown.locator("button").nth(i).text_content()
+        if text.lstrip() == "India":
+            dropdown.locator("button").nth(i).click()
             break
+
     logger.info(f"Completed entering checkout information")
 
+    # place the order
+    # confirm the correct email
+    expect(page.locator(".user__name [type='text']").first).to_contain_text(email)
+    # place the order
+    page.locator("a:has-text('Place Order')").click()
+    logger.info(f"order has been placed")
+    # verify the order was placed successfully
+    expect(page.locator(".hero-primary")).to_contain_text(" Thankyou for the order. ")
+    # grab the order ID to print out
+    order_id = page.locator(".em-spacer-1 .ng-star-inserted").text_content()
+    logger.info(f"the Order ID = ${order_id}")
 
+    # verify the order appears on the Orders page
+    page.locator("button[routerlink*='myorders']").click()
+    # grab the table with all of the orders
+    rows = page.locator("tbody tr")
+    counter = rows.count()
+    logger.info(f"orders row count = {counter}")
+    # loop through each row of the table and check the order ID
+    for i in range(0, 7):
+        row_orderID = rows.nth(i).locator("th").text_content()
+        logger.info(f"row order id = {row_orderID}")
+        if order_id.find(row_orderID) != -1:
+            rows.nth(i).locator("button").first.click()
+            break
+
+    # we're now viewing the order summary
+    logger.info(f"we're now viewing the order summary")
+
+    # verify the order id on the order summary page
+    order_details = page.locator(".col-text").text_content()
+    logger.info(f"here are the order details {order_details}")
