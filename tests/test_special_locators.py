@@ -21,4 +21,3 @@ def test_getby_locators(page: Page, init_logger):
     page.get_by_role("link", name='Shop').click()
 
     page.locator("app-card").filter(has_text='Nokia Edge').get_by_role("button").click()
-    
